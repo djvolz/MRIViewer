@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="frm-Xv-WQk"/>
+                        <viewControllerLayoutGuide type="bottom" id="1hs-Kd-vge"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fWO-ml-bqu">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="881"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </scrollView>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="43" translatesAutoresizingMaskIntoConstraints="NO" id="shB-e7-V9q">
+                                <rect key="frame" x="80" y="889" width="608" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="didChangeImageSlider:" destination="BYZ-38-t0r" eventType="valueChanged" id="dVh-6K-cmo"/>
+                                </connections>
+                            </slider>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="gVg-th-VNj">
+                                <rect key="frame" x="366" y="422" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" red="0.40000000596046448" green="0.80000001192092896" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="vSI-jO-0VT">
+                                <rect key="frame" x="11" y="958" width="300" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="XY"/>
+                                    <segment title="XZ"/>
+                                    <segment title="YZ"/>
+                                </segments>
+                                <connections>
+                                    <action selector="didChangePlaneSelector:" destination="BYZ-38-t0r" eventType="valueChanged" id="nxN-L5-yGJ"/>
+                                </connections>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="wFp-xO-P0i">
+                                <rect key="frame" x="448" y="958" width="300" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Source"/>
+                                    <segment title="Reference"/>
+                                    <segment title="Registered"/>
+                                    <segment title="Checkered"/>
+                                </segments>
+                                <connections>
+                                    <action selector="didChangeLocationFolderSelector:" destination="BYZ-38-t0r" eventType="valueChanged" id="zec-6o-ZZW"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v2c-11-R3P">
+                                <rect key="frame" x="342" y="956" width="85" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Clear Cache">
+                                    <color key="titleColor" white="1" alpha="0.53000000000000003" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didPressClearCacheButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kpI-vZ-tOo"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="tintColor" red="0.40000000596046448" green="0.80000001192092896" blue="1" alpha="0.84999999999999998" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="wFp-xO-P0i" firstAttribute="baseline" secondItem="v2c-11-R3P" secondAttribute="baseline" id="9DO-dd-vqS"/>
+                            <constraint firstItem="shB-e7-V9q" firstAttribute="centerX" secondItem="v2c-11-R3P" secondAttribute="centerX" id="BKm-1o-7xM"/>
+                            <constraint firstItem="v2c-11-R3P" firstAttribute="top" secondItem="shB-e7-V9q" secondAttribute="bottom" constant="37" id="CT2-2l-UWC"/>
+                            <constraint firstAttribute="trailing" secondItem="fWO-ml-bqu" secondAttribute="trailing" id="Ftt-IU-tad"/>
+                            <constraint firstItem="shB-e7-V9q" firstAttribute="top" secondItem="fWO-ml-bqu" secondAttribute="bottom" constant="8" symbolic="YES" id="Gen-0H-BvJ"/>
+                            <constraint firstItem="fWO-ml-bqu" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="I9k-D3-CeL"/>
+                            <constraint firstAttribute="trailing" secondItem="wFp-xO-P0i" secondAttribute="trailing" constant="20" symbolic="YES" id="IEY-AX-Nkd"/>
+                            <constraint firstItem="v2c-11-R3P" firstAttribute="bottom" secondItem="wFp-xO-P0i" secondAttribute="bottom" id="OMk-tZ-LLw"/>
+                            <constraint firstItem="gVg-th-VNj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="366" id="Qid-AU-yma"/>
+                            <constraint firstItem="shB-e7-V9q" firstAttribute="centerX" secondItem="fWO-ml-bqu" secondAttribute="centerX" id="hOT-6D-j8h"/>
+                            <constraint firstItem="gVg-th-VNj" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-71.5" id="jIQ-Y3-OhI"/>
+                            <constraint firstItem="vSI-jO-0VT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="11" id="kX5-Tg-Q9J"/>
+                            <constraint firstItem="vSI-jO-0VT" firstAttribute="top" secondItem="wFp-xO-P0i" secondAttribute="top" id="lPT-GP-OKc"/>
+                            <constraint firstItem="fWO-ml-bqu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="pks-H4-g6A"/>
+                            <constraint firstItem="vSI-jO-0VT" firstAttribute="baseline" secondItem="v2c-11-R3P" secondAttribute="baseline" id="sVm-MX-Xcd"/>
+                            <constraint firstItem="shB-e7-V9q" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="82" id="vFX-xG-2Qc"/>
+                            <constraint firstItem="v2c-11-R3P" firstAttribute="leading" secondItem="vSI-jO-0VT" secondAttribute="trailing" constant="31" id="vW5-Iz-hGh"/>
+                            <constraint firstItem="wFp-xO-P0i" firstAttribute="leading" secondItem="v2c-11-R3P" secondAttribute="trailing" constant="21" id="wN6-vh-aya"/>
+                            <constraint firstItem="1hs-Kd-vge" firstAttribute="top" secondItem="vSI-jO-0VT" secondAttribute="bottom" constant="38" id="xfQ-fj-Z29"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="activitySpinner" destination="gVg-th-VNj" id="yBM-5r-MbM"/>
+                        <outlet property="imageSlider" destination="shB-e7-V9q" id="MN4-aP-w6H"/>
+                        <outlet property="locationFolderSelector" destination="wFp-xO-P0i" id="aa6-cV-UDm"/>
+                        <outlet property="planeSelector" destination="vSI-jO-0VT" id="zxc-0q-kt6"/>
+                        <outlet property="scrollView" destination="fWO-ml-bqu" id="G2q-AS-tKk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackOpaque"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>
