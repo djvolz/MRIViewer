@@ -19,8 +19,16 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *planeSelector;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *locationFolderSelector;
 
-@property (strong, nonatomic) NSMutableArray *imageData;
-@property (strong, nonatomic) NSMutableArray *images;
+@property (strong, nonatomic) NSMutableArray *imageData_src;
+@property (strong, nonatomic) NSMutableArray *imageData_ref;
+@property (strong, nonatomic) NSMutableArray *imageData_registered;
+@property (strong, nonatomic) NSMutableArray *imageData_checker;
+
+@property (strong, nonatomic) NSMutableArray *images_src;
+@property (strong, nonatomic) NSMutableArray *images_ref;
+@property (strong, nonatomic) NSMutableArray *images_registered;
+@property (strong, nonatomic) NSMutableArray *images_checker;
+
 
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activitySpinner;
 
@@ -32,8 +40,17 @@
 {
     [super viewDidLoad];
     
-    self.images = [[NSMutableArray alloc] init];
-    self.imageData = [[NSMutableArray alloc] init];
+    self.images_src           = [[NSMutableArray alloc] init];
+    self.images_ref           = [[NSMutableArray alloc] init];
+    self.images_registered    = [[NSMutableArray alloc] init];
+    self.images_checker       = [[NSMutableArray alloc] init];
+    
+    
+    self.imageData_src        = [[NSMutableArray alloc] init];
+    self.imageData_ref        = [[NSMutableArray alloc] init];
+    self.imageData_registered = [[NSMutableArray alloc] init];
+    self.imageData_checker    = [[NSMutableArray alloc] init];
+    
 	[self.scrollView addSubview:self.imageView];
     self.scrollView.minimumZoomScale = 1.0;
     self.scrollView.maximumZoomScale = 10.0;
@@ -44,15 +61,40 @@
     NSLog(@"viewDidLoad");
     
     
+    [self fillCache];
     
+    [self resetImage];
+}
+
+- (void)fillCache {
     [self enable];
     for (int i = 0; i <= 43; i++) {
-        self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@src/xy/%d.png", SERVER, i]];
-        [self cacheImages];
+        self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@checker/%@/%d.png", SERVER, self.viewPlane, i]];
+        [self cacheImages:@"checker"];
     }
     [self disable];
     
-    [self resetImage];
+    [self enable];
+    for (int i = 0; i <= 43; i++) {
+        self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@ref/%@/%d.png", SERVER, self.viewPlane, i]];
+        [self cacheImages:@"ref"];
+    }
+    [self disable];
+    
+    [self enable];
+    for (int i = 0; i <= 43; i++) {
+        self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@registered/%@/%d.png", SERVER, self.viewPlane, i]];
+        [self cacheImages:@"registered"];
+    }
+    [self disable];
+    
+    [self enable];
+    for (int i = 0; i <= 43; i++) {
+        self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@src/%@/%d.png", SERVER, self.viewPlane, i]];
+        [self cacheImages:@"src"];
+    }
+    [self disable];
+
 }
 
 - (void)viewDidLayoutSubviews
@@ -67,7 +109,7 @@
 
 - (IBAction)didChangePlaneSelector:(UISegmentedControl *)sender {
     
-   [self clearViewControllerCache];
+    [self clearViewControllerCache];
     
     NSString *viewPlane;
     
@@ -88,20 +130,15 @@
     self.viewPlane = viewPlane;
     self.imageSlider.value = 0;
     
-    NSString *combined = [NSString stringWithFormat:@"%@/%@", self.serverFolder, viewPlane];
-    NSLog(@"combined %@", combined);
-//    [DataCache setSelectedPlane:combined];
+    [self fillCache];
     
+    //    [DataCache setSelectedPlane:combined];
+    
+    
+    //    dispatch_queue_t q = dispatch_queue_create("Cache Clearer", NULL);
+    //    dispatch_async(q, ^{
 
-//    dispatch_queue_t q = dispatch_queue_create("Cache Clearer", NULL);
-//    dispatch_async(q, ^{
-    [self enable];
-        for (int i = 0; i <= 43; i++) {
-            self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@/%d.png", SERVER, self.serverFolder, self.viewPlane, i]];
-            [self cacheImages];
-        }
-    [self disable];
-//    });
+    //    });
     
     
     self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@/%d.png", SERVER, self.serverFolder, self.viewPlane, 0]];
@@ -110,7 +147,7 @@
 
 - (IBAction)didChangeLocationFolderSelector:(UISegmentedControl *)sender {
     
-    [self clearViewControllerCache];
+    //    [self clearViewControllerCache];
     
     NSString *serverFolder;
     
@@ -137,19 +174,19 @@
     
     NSString *combined = [NSString stringWithFormat:@"%@/%@", serverFolder, self.viewPlane];
     NSLog(@"combined %@", combined);
-//    [DataCache setSelectedPlane:combined];
+    //    [DataCache setSelectedPlane:combined];
     
     
-//    dispatch_queue_t q = dispatch_queue_create("Cache Clearer", NULL);
-//    dispatch_async(q, ^{
-    [self enable];
-        for (int i = 0; i <= 43; i++) {
-            self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@/%d.png", SERVER, self.serverFolder,self.viewPlane, i]];
-            [self cacheImages];
-        }
-    [self disable];
-//    });
-
+    //    dispatch_queue_t q = dispatch_queue_create("Cache Clearer", NULL);
+    //    dispatch_async(q, ^{
+    //    [self enable];
+    //        for (int i = 0; i <= 43; i++) {
+    //            self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@/%d.png", SERVER, self.serverFolder,self.viewPlane, i]];
+    //            [self cacheImages];
+    //        }
+    //    [self disable];
+    //    });
+    
     
     self.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@/%@/%d.png", SERVER, self.serverFolder,self.viewPlane, 0]];
     [self resetImage];
@@ -179,21 +216,21 @@
     
     NSString *url = [NSString stringWithFormat:@"%@%@/%@/%d.png", SERVER, self.serverFolder, self.viewPlane, (int)sliderValue];
     
-//    NSLog(url);
+    //    NSLog(url);
     self.imageURL = [NSURL URLWithString:url];
     
-//    NSLog(@"imageSlider");
+    //    NSLog(@"imageSlider");
     [self resetImage];
 }
 
 - (IBAction)didPressClearCacheButton:(UIButton *)sender {
-//    dispatch_queue_t q = dispatch_queue_create("Cache Clearer", NULL);
-//    dispatch_async(q, ^{
-        self.imageSlider.value = 0;
+    //    dispatch_queue_t q = dispatch_queue_create("Cache Clearer", NULL);
+    //    dispatch_async(q, ^{
+    self.imageSlider.value = 0;
     
-        [self clearViewControllerCache];
-//        [DataCache clearCache];
-//    });
+    [self clearViewControllerCache];
+    //        [DataCache clearCache];
+    //    });
 }
 
 - (UIImageView *)imageView
@@ -216,112 +253,153 @@
 
 - (void)setImageURL:(NSURL *)imageURL
 {
-//    NSLog(@"setImageURL");
+    //    NSLog(@"setImageURL");
     _imageURL = imageURL;
-//    [self resetImage];
+    //    [self resetImage];
 }
 
--(void)cacheImages{
-//    NSLog(@"%@", self.imageURL);
+-(void)cacheImages:(NSString *)serverFolder
+{
+    //    NSLog(@"%@", self.imageURL);
     if (self.scrollView) {
         self.scrollView.contentSize = CGSizeZero;
         self.imageView.image = nil;
         
         
         NSUInteger imageIndex = 0;
-//        NSURL *imageURL = self.imageURL;
-//        dispatch_queue_t q = dispatch_queue_create("Photo Fetcher", NULL);
-//        dispatch_async(q, ^{
-
-//            NSURL *cache = [DataCache dataFromURL:imageURL];
-            NSData *imageData;
-//            if (cache) {
-//                imageData = [[NSData alloc]initWithContentsOfURL:cache];
-//                [self.imageData addObject:imageData];
-//            } else {
-//                [DataCache enable];
-                imageData = [[NSData alloc] initWithContentsOfURL:self.imageURL];
-                [self.imageData addObject:imageData];
-//                [DataCache disable];
-//            }
-//            [DataCache dataToCache:imageData forURL:self.imageURL];
-            
-//            if (imageURL == self.imageURL) {
-            
-                    
-                imageIndex = [self.imageData indexOfObject:imageData];
-                UIImage *image = [[UIImage alloc] initWithData:[self.imageData objectAtIndex:imageIndex]];
-                
-//                if (image) {
-            [self.images addObject:image];
-//            [self resetImage];
-//                        self.scrollView.zoomScale = 1.0;
-//                        self.scrollView.contentSize = image.size;
-//                        self.imageView.image = image;
-//                        self.imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
-//                        
-//                        /* Ensure that photo fills entire screen. */
-//                        CGFloat scaleX = self.scrollView.bounds.size.width / self.imageView.image.size.width;
-//                        CGFloat scaleY = self.scrollView.bounds.size.height / self.imageView.image.size.height;
-//                        self.scrollView.zoomScale = MIN(scaleX, scaleY);
-//                }
-//            }
-//        });
+        //        NSURL *imageURL = self.imageURL;
+        //        dispatch_queue_t q = dispatch_queue_create("Photo Fetcher", NULL);
+        //        dispatch_async(q, ^{
+        
+        //            NSURL *cache = [DataCache dataFromURL:imageURL];
+        NSData *imageData;
+        //            if (cache) {
+        //                imageData = [[NSData alloc]initWithContentsOfURL:cache];
+        //                [self.imageData addObject:imageData];
+        //            } else {
+        //                [DataCache enable];
+        imageData = [[NSData alloc] initWithContentsOfURL:self.imageURL];
+        
+        UIImage *image;
+        if ([serverFolder isEqualToString:@"src"]) {
+            [self.imageData_src addObject:imageData];
+            imageIndex = [self.imageData_src indexOfObject:imageData];
+            image = [[UIImage alloc] initWithData:[self.imageData_src objectAtIndex:imageIndex]];
+            [self.images_src addObject:image];
+        } else if ([serverFolder isEqualToString:@"ref"]) {
+            [self.imageData_ref addObject:imageData];
+            imageIndex = [self.imageData_ref indexOfObject:imageData];
+            image = [[UIImage alloc] initWithData:[self.imageData_ref objectAtIndex:imageIndex]];
+            [self.images_ref addObject:image];
+        } else if ([serverFolder isEqualToString:@"registered"]) {
+            [self.imageData_registered addObject:imageData];
+            imageIndex = [self.imageData_registered indexOfObject:imageData];
+            image = [[UIImage alloc] initWithData:[self.imageData_registered objectAtIndex:imageIndex]];
+            [self.images_registered addObject:image];
+        } else {
+            [self.imageData_checker addObject:imageData];
+            imageIndex = [self.imageData_checker indexOfObject:imageData];
+            image = [[UIImage alloc] initWithData:[self.imageData_checker objectAtIndex:imageIndex]];
+            [self.images_checker addObject:image];
+        }
+        //                [DataCache disable];
+        //            }
+        //            [DataCache dataToCache:imageData forURL:self.imageURL];
+        
+        //            if (imageURL == self.imageURL) {
+        
+        
+        //                if (image) {
+        //            [self.images addObject:image];
+        //            [self resetImage];
+        //                        self.scrollView.zoomScale = 1.0;
+        //                        self.scrollView.contentSize = image.size;
+        //                        self.imageView.image = image;
+        //                        self.imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+        //
+        //                        /* Ensure that photo fills entire screen. */
+        //                        CGFloat scaleX = self.scrollView.bounds.size.width / self.imageView.image.size.width;
+        //                        CGFloat scaleY = self.scrollView.bounds.size.height / self.imageView.image.size.height;
+        //                        self.scrollView.zoomScale = MIN(scaleX, scaleY);
+        //                }
+        //            }
+        //        });
     }
 }
 
 - (void)resetImage
 {
     if (self.scrollView) {
-//        self.scrollView.contentSize = CGSizeZero;
-//        self.imageView.image = nil;
+        //        self.scrollView.contentSize = CGSizeZero;
+        //        self.imageView.image = nil;
         
-//        NSURL *imageURL = self.imageURL;
-//        dispatch_queue_t q = dispatch_queue_create("Photo Fetcher", NULL);
-//        dispatch_async(q, ^{
-//            
-//            NSURL *cache = [DataCache dataFromURL:imageURL];
-//            NSData *imageData;
-//            if (cache) {
-//                imageData = [[NSData alloc]initWithContentsOfURL:cache];
-//            } else {
-//                [DataCache enable];
-//                imageData = [[NSData alloc] initWithContentsOfURL:self.imageURL];
-//                [DataCache disable];
-//            }
-//            [DataCache dataToCache:imageData forURL:self.imageURL];
+        //        NSURL *imageURL = self.imageURL;
+        //        dispatch_queue_t q = dispatch_queue_create("Photo Fetcher", NULL);
+        //        dispatch_async(q, ^{
+        //
+        //            NSURL *cache = [DataCache dataFromURL:imageURL];
+        //            NSData *imageData;
+        //            if (cache) {
+        //                imageData = [[NSData alloc]initWithContentsOfURL:cache];
+        //            } else {
+        //                [DataCache enable];
+        //                imageData = [[NSData alloc] initWithContentsOfURL:self.imageURL];
+        //                [DataCache disable];
+        //            }
+        //            [DataCache dataToCache:imageData forURL:self.imageURL];
         
-//            if (imageURL == self.imageURL) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
+        //            if (imageURL == self.imageURL) {
+        //                dispatch_async(dispatch_get_main_queue(), ^{
         float sliderValue = self.imageSlider.value;
         UIImage *image;
-        if ((int)sliderValue < [self.images count]) {
-            image = [self.images objectAtIndex:(int)sliderValue];
-            NSLog(@"%d",(int)sliderValue);
-
-        }
         
-                    if (image) {
-                        self.scrollView.zoomScale = 1.0;
-                        self.scrollView.contentSize = image.size;
-                        self.imageView.image = image;
-                        self.imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
-                        
-                        /* Ensure that photo fills entire screen. */
-                        CGFloat scaleX = self.scrollView.bounds.size.width / self.imageView.image.size.width;
-                        CGFloat scaleY = self.scrollView.bounds.size.height / self.imageView.image.size.height;
-                        self.scrollView.zoomScale = MIN(scaleX, scaleY);
-                    }
-//                });
-//            }
-//        });
+        
+        if ([self.serverFolder isEqualToString:@"src"]) {
+            if ((int)sliderValue < [self.images_src count])
+                image = [self.images_src objectAtIndex:(int)sliderValue];
+        } else if ([self.serverFolder isEqualToString:@"ref"]) {
+            if ((int)sliderValue < [self.images_ref count])
+                image = [self.images_ref objectAtIndex:(int)sliderValue];
+        } else if ([self.serverFolder isEqualToString:@"registered"]) {
+            if ((int)sliderValue < [self.images_registered count])
+                image = [self.images_registered objectAtIndex:(int)sliderValue];
+        } else {
+            if ((int)sliderValue < [self.images_checker count])
+                image = [self.images_checker objectAtIndex:(int)sliderValue];
+        }
+        //            image = [self.images objectAtIndex:(int)sliderValue];
+        NSLog(@"%d",(int)sliderValue);
+        
+        
+        
+        if (image) {
+            self.scrollView.zoomScale = 1.0;
+            self.scrollView.contentSize = image.size;
+            self.imageView.image = image;
+            self.imageView.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+            
+            /* Ensure that photo fills entire screen. */
+            CGFloat scaleX = self.scrollView.bounds.size.width / self.imageView.image.size.width;
+            CGFloat scaleY = self.scrollView.bounds.size.height / self.imageView.image.size.height;
+            self.scrollView.zoomScale = MIN(scaleX, scaleY);
+        }
+        //                });
+        //            }
+        //        });
     }
 }
 
 -(void)clearViewControllerCache
 {
-    [self.imageData removeAllObjects];
-    [self.images removeAllObjects];
+    [self.imageData_src        removeAllObjects];
+    [self.imageData_ref        removeAllObjects];
+    [self.imageData_registered removeAllObjects];
+    [self.imageData_checker    removeAllObjects];
+    
+    [self.images_src removeAllObjects];
+    [self.images_ref removeAllObjects];
+    [self.images_registered removeAllObjects];
+    [self.images_checker removeAllObjects];
 }
 
 
